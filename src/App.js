@@ -2,6 +2,8 @@ import './App.css';
 import {getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signOut} from  'firebase/auth'
 import app from './firebase/firebase.init';
 import { useState } from 'react';
+import Register from './components/Register';
+import RegisterBootstrap from './components/RegisterBootstrap';
 
 const auth = getAuth(app);
 
@@ -58,12 +60,18 @@ function App() {
       setUser({});
     })
   }
-
   const {displayName, photoURL, email} = user;
+
   return (
-    <div className="App">
+    <div className="w-50 mx-auto">
+
+      {/* <Register></Register> */}
+      <RegisterBootstrap></RegisterBootstrap>
+
+      <br></br><br></br>
       {/* Conditional Rendering by ternary operator */}
-       {
+      <div className='w-50 mx-auto'>
+      {
         user.uid ? 
         <button onClick={handleSignOut} type=""> Sign Out</button>
         :
@@ -78,6 +86,7 @@ function App() {
           <p>User Name: {displayName}</p>
           <p>Email: {email}</p>
         </div>}
+      </div>
 
     </div>
   );
