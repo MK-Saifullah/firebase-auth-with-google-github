@@ -7,17 +7,22 @@ import app from '../firebase/firebase.init';
 const auth = getAuth(app);
 
 const RegisterBootstrap = () => {
-    const [user, setUser] = useState({})
-    const [passwordError, setPasswordError] = useState('')
+    const [user, setUser] = useState({});
+    const [passwordError, setPasswordError] = useState('');
+    const [success, setSuccess] = useState(false);
 
     const handleRegister = (e) => {
         e.preventDefault();
-        const email = e.target.email.value
-        const password = e.target.password.value
+        setSuccess(false);
+        setPasswordError('')
+        const form = e.target;
+        // const email = e.target.email.value
+        const email = form.email.value
+        const password = form.password.value
         console.log('Email:', email, 'Password:', password)
 
-        if(!/(?=.*?[A-Z].*[A-Z])/.test(password)){
-            setPasswordError('Please provide at least two upper case letters')
+        if(!/(?=.*?[A-Z])/.test(password)){
+            setPasswordError('Please provide at least ONE upper case letters')
             return
         }
         if(!/(?=.*?[0-9])/.test(password)){
@@ -37,18 +42,22 @@ const RegisterBootstrap = () => {
         createUserWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
             const user = userCredential.user;
-            console.log(user)
-            setUser(user)
+            console.log(user);
+            setUser(user);
+            form.reset();
+            setSuccess(true);
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.error(errorCode, errorMessage)
+            setPasswordError(errorMessage)
           });
     }
     const {uid} = user
     return (
         <div className='w-50 mx-auto'>
+            <h3 className='text-success'>Please Register here!!!</h3>
              <Form onSubmit = {handleRegister}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
@@ -62,7 +71,8 @@ const RegisterBootstrap = () => {
                 </Form.Group>
 
                 <p className='text-danger'>{passwordError}</p>
-
+                {success && <p className='text-success'>User successfully created</p>}
+                
                 <Button variant="primary" type="submit">
                     Register
                 </Button>
